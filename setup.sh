@@ -27,7 +27,7 @@ export HISTFILE=".bash_history"
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
 export HISTIGNORE="clear":"ls":"ll":"l"
-export HISTTIMEFORMAT="%A, %F %T"
+export HISTTIMEFORMAT="%A, %F %T "
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -39,7 +39,7 @@ echo '############ added by script ############
 # ---------- quality of life ---------- #
 alias alias-edt="nvim ~/.bash_aliases"
 alias bash-edt="nvim ~/.bashrc"
-alias history="nvim ~/.bash_history"
+alias nhistory="nvim ~/.bash_history"
 alias refresh="source ~/.bashrc"
 alias grep="grep --color=auto"
 alias l="ls -CF"
