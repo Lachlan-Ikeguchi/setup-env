@@ -23,7 +23,7 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
-export HISTFILE="~/.bash_history"
+export HISTFILE="$HOME/.bash_history"
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
 export HISTIGNORE="clear":"ls":"ll":"l":"history":"nh"
