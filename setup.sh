@@ -13,6 +13,9 @@ git clone https://github.com/lachlan-ikeguchi/nvim ~/.config/nvim
 
 # allow for adding aliases
 echo '# ---------- added by script ---------- #
+source $HOME/bin/git-prompt.sh
+PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "
+
 if command -v tmux > /dev/null; then
   if [ -z "$TMUX" ]; then
     if tmux list-sessions > /dev/null 2>&1; then
@@ -36,9 +39,6 @@ fi
 
 # aliases
 echo '############ added by script ############
-source $HOME/bin/git-prompt.sh
-PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "
-
 # ---------- quality of life ---------- #
 alias alias-edt="nvim ~/.bash_aliases"
 alias bash-edt="nvim ~/.bashrc"
