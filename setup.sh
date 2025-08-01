@@ -1,6 +1,6 @@
 # install necessary stuff
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux-tmp/
-cp ./git-prompt.sh $HOME/bin/
+cp ./git-prompt.sh $HOME/.git-prompt.sh
 
 # add configs
 git clone https://github.com/lachlan-ikeguchi/htop ~/.config/htop
@@ -12,12 +12,12 @@ rm -rf ~/.config/tmux-tmp
 git clone https://github.com/lachlan-ikeguchi/nvim ~/.config/nvim
 
 # allow for adding aliases
-echo '# ---------- added by script ---------- #
-source $HOME/bin/git-prompt.sh
-PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "
+echo "# ---------- added by script ---------- #
+source $HOME/.git-prompt.sh
+PROMPT_COMMAND='PS1=\"\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ \"'
 
 if command -v tmux > /dev/null; then
-  if [ -z "$TMUX" ]; then
+  if [ -z '$TMUX' ]; then
     if tmux list-sessions > /dev/null 2>&1; then
       tmux attach-session -d || tmux new-session
     else
@@ -26,27 +26,33 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
-export HISTFILE="$HOME/.bash_history"
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWSTASHSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export GIT_PS1_SHOWUPSTREAM='auto'
+export GIT_PS1_SHOWCONFLICTSTATE='yes'
+
+export HISTFILE='$HOME/.bash_history'
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
-export HISTIGNORE="clear":"ls":"ll":"l":"history":"nh"
-export HISTTIMEFORMAT="%A, %F %T "
+export HISTIGNORE='clear':"ls":"ll":"l":"history":"nh"
+export HISTTIMEFORMAT='%A, %F %T '
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-# ------------------------------------- #' >> ~/.bashrc
+# ------------------------------------- #" >> ~/.bashrc
 
 # aliases
-echo '############ added by script ############
+echo "############ added by script ############
 # ---------- quality of life ---------- #
-alias alias-edt="nvim ~/.bash_aliases"
-alias bash-edt="nvim ~/.bashrc"
-alias nh="nvim ~/.bash_history"
-alias refresh="source ~/.bashrc"
-alias grep="grep --color=auto"
-alias l="ls -CF"
-alias ll="ls -la"
-alias ls="ls --color=auto"
-alias pub-ip="curl ident.me"
-#########################################' >> ~/.bash_aliases
+alias alias-edt='nvim ~/.bash_aliases'
+alias bash-edt='nvim ~/.bashrc'
+alias nh='nvim ~/.bash_history'
+alias refresh='source ~/.bashrc'
+alias grep='grep --color=auto'
+alias l='ls -CF'
+alias ll='ls -la'
+alias ls='ls --color=auto'
+alias pub-ip='curl ident.me'
+#########################################" >> ~/.bash_aliases
