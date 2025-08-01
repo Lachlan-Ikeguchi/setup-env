@@ -14,7 +14,16 @@ git clone https://github.com/lachlan-ikeguchi/nvim ~/.config/nvim
 # allow for adding aliases
 echo "# ---------- added by script ---------- #
 source $HOME/.git-prompt.sh
-PROMPT_COMMAND='PS1=\"\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ \"'
+
+function _prompt_container_or_host() {
+  if [[ -n "$CONTAINER_ID" ]]; then
+    echo "\[\033[33m\]$(echo "$CONTAINER_ID")"
+  else
+    echo "\[\033[31m\]\H"
+  fi
+}
+
+PROMPT_COMMAND='PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ $(_prompt_container_or_host)\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "'
 
 if command -v tmux > /dev/null; then
   if [ -z '$TMUX' ]; then
