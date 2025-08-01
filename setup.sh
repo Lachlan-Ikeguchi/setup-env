@@ -35,6 +35,8 @@ fi
 
 # aliases
 echo '############ added by script ############
+PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H \[\033[34m\]\w \[\033[00m\]\$ "
+
 # ---------- quality of life ---------- #
 alias alias-edt="nvim ~/.bash_aliases"
 alias bash-edt="nvim ~/.bashrc"
