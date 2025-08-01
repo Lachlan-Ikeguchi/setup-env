@@ -1,5 +1,6 @@
 # install necessary stuff
 git clone https://github.com/tmux-plugins/tpm ~/.config/tmux-tmp/
+cp ./git-prompt.sh $HOME/bin/
 
 # add configs
 git clone https://github.com/lachlan-ikeguchi/htop ~/.config/htop
@@ -35,7 +36,8 @@ fi
 
 # aliases
 echo '############ added by script ############
-PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H \[\033[34m\]\w \[\033[00m\]\$ "
+source $HOME/bin/git-prompt.sh
+PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ \[\033[31m\]\H\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "
 
 # ---------- quality of life ---------- #
 alias alias-edt="nvim ~/.bash_aliases"
