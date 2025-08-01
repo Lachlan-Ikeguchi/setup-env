@@ -35,7 +35,7 @@ export GIT_PS1_SHOWCONFLICTSTATE='yes'
 export HISTFILE='$HOME/.bash_history'
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
-export HISTIGNORE='clear':"ls":"ll":"l":"history":"nh"
+export HISTIGNORE='clear':'ls':'ll':'l':'history':'nh'
 export HISTTIMEFORMAT='%A, %F %T '
 
 if [ -f ~/.bash_aliases ]; then
