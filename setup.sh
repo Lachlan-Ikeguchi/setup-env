@@ -1,6 +1,11 @@
 # install necessary stuff
-git clone https://github.com/tmux-plugins/tpm ~/.config/tmux-tmp/
+git clone git@github.com:tmux-plugins/tpm.git ~/.config/tmux-tmp/
 cp ./git-prompt.sh $HOME/.git-prompt.sh
+git clone git@github.com:neovim/neovim.git ~/neovim
+cd ~/neovim/
+make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
+make install
+export PATH="$HOME/neovim/bin:$PATH"
 
 # add configs
 git clone https://github.com/lachlan-ikeguchi/htop ~/.config/htop
@@ -23,7 +28,7 @@ function _prompt_container_or_host() {
   fi
 }
 
-PROMPT_COMMAND='PS1="\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ $(_prompt_container_or_host)\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "'
+PROMPT_COMMAND='PS1=\"\[\033[35m\][`uname -s -r`] \[\033[32m\]\u \[\033[00m\]@ $(_prompt_container_or_host)\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ \"'
 
 if command -v tmux > /dev/null; then
   if [ -z '$TMUX' ]; then
@@ -34,6 +39,8 @@ if command -v tmux > /dev/null; then
     fi
   fi
 fi
+
+export PATH="$HOME/neovim/bin:$PATH"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true
@@ -59,6 +66,7 @@ alias alias-edt='nvim ~/.bash_aliases'
 alias bash-edt='nvim ~/.bashrc'
 alias nh='nvim ~/.bash_history'
 alias refresh='source ~/.bashrc'
+alias update-tools='cd ~/neovim/ && rm -r build/ && make CMAKE_EXTRA_FLAGS=\"-DCMAKE_INSTALL_PREFIX=$HOME/neovim\" && make install && cd'
 alias grep='grep --color=auto'
 alias l='ls -CF'
 alias ll='ls -la'
