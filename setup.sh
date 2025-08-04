@@ -40,7 +40,7 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
-export PATH="$HOME/neovim/bin:$PATH"
+export PATH="\$HOME/neovim/bin:\$PATH"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true
@@ -66,7 +66,7 @@ alias alias-edt='nvim ~/.bash_aliases'
 alias bash-edt='nvim ~/.bashrc'
 alias nh='nvim ~/.bash_history'
 alias refresh='source ~/.bashrc'
-alias update-tools='cd ~/neovim/ && rm -r build/ && make CMAKE_EXTRA_FLAGS=\"-DCMAKE_INSTALL_PREFIX=$HOME/neovim\" && make install && cd'
+alias update-tools='cd ~/neovim/ && rm -r build/ && make CMAKE_EXTRA_FLAGS=\"-DCMAKE_INSTALL_PREFIX=\$HOME/neovim\" && make install && cd'
 alias grep='grep --color=auto'
 alias l='ls -CF'
 alias ll='ls -la'
