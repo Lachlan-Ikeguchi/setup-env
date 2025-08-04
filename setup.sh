@@ -1,6 +1,6 @@
 # install necessary stuff
-# git clone git@github.com:tmux-plugins/tpm.git ~/.config/tmux-tmp/
-# cp ./git-prompt.sh $HOME/.git-prompt.sh
+git clone git@github.com:tmux-plugins/tpm.git ~/.config/tmux-tmp/
+cp ./git-prompt.sh $HOME/.git-prompt.sh
 git clone git@github.com:neovim/neovim.git ~/neovim
 cd ~/neovim/
 make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
@@ -8,13 +8,13 @@ make install
 export PATH="$HOME/neovim/bin:$PATH"
 
 # add configs
-# git clone https://github.com/lachlan-ikeguchi/htop ~/.config/htop
-# git clone https://github.com/lachlan-ikeguchi/tmux ~/.config/tmux
-# mkdir ~/.config/tmux/plugins
-# mkdir ~/.config/tmux/plugins/tpm
-# mv ~/.config/tmux-tmp/* ~/.config/tmux/plugins/tpm
-# rm -rf ~/.config/tmux-tmp
-# git clone https://github.com/lachlan-ikeguchi/nvim ~/.config/nvim
+git clone https://github.com/lachlan-ikeguchi/htop ~/.config/htop
+git clone https://github.com/lachlan-ikeguchi/tmux ~/.config/tmux
+mkdir ~/.config/tmux/plugins
+mkdir ~/.config/tmux/plugins/tpm
+mv ~/.config/tmux-tmp/* ~/.config/tmux/plugins/tpm
+rm -rf ~/.config/tmux-tmp
+git clone https://github.com/lachlan-ikeguchi/nvim ~/.config/nvim
 
 # allow for adding aliases
 echo "# ---------- added by script ---------- #
