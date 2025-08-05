@@ -3,7 +3,7 @@ source ~/.scripts/git-prompt.sh
 
 function _prompt_container_or_host() {
   if [[ -n \"\$CONTAINER_ID\" ]]; then
-    echo \"\\[\\033[33m\\]\$\(echo \"\$CONTAINER_ID\")\"
+    echo \"\\[\\033[33m\\]$(echo \"\$CONTAINER_ID\")\"
   else
     echo \"\\[\\033[31m\\]\\H\"
   fi
