@@ -1,7 +1,7 @@
-# ./install.sh
+./install.sh
 
-# ./config.sh
+./config.sh
 
-# ./bashrc.sh
+./bashrc.sh
 
 ./bash_alias.sh
