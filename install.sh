@@ -1,6 +1,5 @@
 git clone git@github.com:tmux-plugins/tpm.git ~/.config/tmux-tmp/
-mkdir ~/.scripts
-cp ./git-prompt.sh ~/.scripts/git-prompt.sh
+cp .scripts ~
 git clone git@github.com:neovim/neovim.git ~/neovim
 cd ~/neovim/
 make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"

@@ -2,9 +2,10 @@ echo "############ added by script ############
 # ---------- quality of life ---------- #
 alias alias-edt='nvim ~/.bash_aliases'
 alias bash-edt='nvim ~/.bashrc'
+alias sc-edt='nvim ~/.scripts/'
 alias nh='nvim ~/.bash_history'
 alias refresh='source ~/.bashrc'
-alias update-tools='cd ~/neovim/ && git pull && rm -r build/ && make CMAKE_EXTRA_FLAGS=\"-DCMAKE_INSTALL_PREFIX=\$HOME/neovim\" && make install && cd'
+alias update-tools='~/.scripts/update-tools.sh'
 alias grep='grep --color=auto'
 alias l='ls -CF'
 alias ll='ls -la'
