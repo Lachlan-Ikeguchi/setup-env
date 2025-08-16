@@ -21,7 +21,7 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
-export PATH="\$HOME/neovim/bin:\$PATH"
+export PATH=\"\$HOME/neovim/bin:\$PATH\"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true
@@ -29,7 +29,7 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 export GIT_PS1_SHOWUPSTREAM='auto'
 export GIT_PS1_SHOWCONFLICTSTATE='yes'
 
-export HISTFILE='~/.bash_history'
+export HISTFILE=\"\$HOME/.bash_history\"
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
 export HISTIGNORE='clear':'ls':'ll':'l':'history':'nh'
