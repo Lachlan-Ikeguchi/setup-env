@@ -10,5 +10,5 @@ alias grep='grep --color=auto'
 alias l='ls -CF'
 alias ll='ls -la'
 alias ls='ls --color=auto'
-alias pub-ip='curl ident.me'
+alias pub-ip='echo \"\$(curl -s ident.me)\"'
 #########################################" >> ~/.bash_aliases
