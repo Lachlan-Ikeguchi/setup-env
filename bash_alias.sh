@@ -11,4 +11,5 @@ alias l='ls -CF'
 alias ll='ls -la'
 alias ls='ls --color=auto'
 alias pub-ip='echo \"\$(curl -s ident.me)\"'
+alias time='/usr/bin/time -v'
 #########################################" >> ~/.bash_aliases
