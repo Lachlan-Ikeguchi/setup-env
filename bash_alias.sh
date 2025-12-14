@@ -2,7 +2,7 @@ echo "############ added by script ############
 # ---------- quality of life ---------- #
 alias alias-edt='nvim ~/.bash_aliases'
 alias bash-edt='nvim ~/.bashrc'
-alias sc-edt='nvim ~/.scripts/'
+alias sc-edt='cd ~/.scripts/ && nvim'
 alias nh='nvim ~/.bash_history'
 alias refresh='source ~/.bashrc'
 alias update-tools='~/.scripts/update-tools.sh'
