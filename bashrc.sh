@@ -21,6 +21,10 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
+if [ -n \"\$TMUX\"]; then
+  . torsocks on
+fi
+
 export PATH=\"\$HOME/neovim/bin:\$PATH\"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
@@ -38,6 +42,4 @@ export HISTTIMEFORMAT='%A, %F %T '
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-
-. torsocks on
 # ------------------------------------- #" >> ~/.bashrc
