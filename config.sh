@@ -6,7 +6,15 @@ git clone git@github.com:lachlan-ikeguchi/alacritty ~/.config/alacritty
 
 git clone git@github.com:lachlan-ikeguchi/htop ~/.config/htop
 
-git clone git@github.com:Lachlan-Ikeguchi/btop ~/.config/btop
+echo "
+
+#################################################################################################
+Remember to export protonmail bridge TLS certificates and run 'sudo trust anchor --store' on them
+#################################################################################################
+
+"
+
+git clone git@github.com:lachlan-ikeguchi/aerc ~/.config/aerc
 
 git clone git@github.com:lachlan-ikeguchi/tmux ~/.config/tmux
 mkdir ~/.config/tmux/plugins
