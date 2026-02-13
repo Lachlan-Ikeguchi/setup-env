@@ -21,11 +21,14 @@ echo "
 	editor = nvim
 [submodule]
     recurse = true
+[format]
+    signOff = yes
 [sendemail]
+    annotate = yes
     confirm = always
-    smtpserver = 127.0.0.1
-    smtpserverport = 1025
-    smtpuser = lachlan_ikeguchi@proton.me
-    smtppass = 
-    smtpencryption = none
+    smtpServer = 127.0.0.1
+    smtpServerport = 1025
+    smtpUser = lachlan_ikeguchi@proton.me
+    smtpPass = 
+    smtpEncryption = none
 " >> ~/.gitconfig
