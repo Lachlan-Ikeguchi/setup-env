@@ -1,5 +1,7 @@
 ./install.sh
 
+./git.sh
+
 ./config.sh
 
 ./bashrc.sh
