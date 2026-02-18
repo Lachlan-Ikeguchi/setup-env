@@ -1,6 +1,4 @@
-git clone git@github.com:tmux-plugins/tpm.git ~/.config/tmux-tmp/
-
-cp -r .scripts ~
+cp -r ./scripts/* ~/.scripts
 
 git clone git@github.com:neovim/neovim.git ~/neovim
 cd ~/neovim/

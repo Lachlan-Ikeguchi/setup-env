@@ -19,5 +19,7 @@ git clone git@github.com:lachlan-ikeguchi/aerc ~/.config/aerc
 git clone git@github.com:lachlan-ikeguchi/tmux ~/.config/tmux
 mkdir ~/.config/tmux/plugins
 mkdir ~/.config/tmux/plugins/tpm
+
+git clone git@github.com:tmux-plugins/tpm.git ~/.config/tmux-tmp/
 mv ~/.config/tmux-tmp/* ~/.config/tmux/plugins/tpm
 rm -rf ~/.config/tmux-tmp
