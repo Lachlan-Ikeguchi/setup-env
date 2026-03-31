@@ -25,6 +25,8 @@ if [ -n \"\$TMUX\"]; then
   . torsocks on
 fi
 
+export JULIA_NUM_THREADS=auto
+
 export PATH=\"\$HOME/neovim/bin:\$PATH\"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
