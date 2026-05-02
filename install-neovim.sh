@@ -1,4 +1,4 @@
-git clone git@github.com:neovim/neovim.git ~/neovim
+git clone https://github.com/neovim/neovim.git ~/neovim
 cd ~/neovim/
 make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"
 make CMAKE_BUILD_TYPE=Release

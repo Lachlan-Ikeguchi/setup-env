@@ -21,7 +21,7 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
-if [ -n \"\$TMUX\"]; then
+if [ -n \"\$TMUX\" ]; then
   . torsocks on
 fi
 
