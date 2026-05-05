@@ -31,4 +31,6 @@ echo "
     smtpUser = lachlan_ikeguchi@proton.me
     smtpPass = 
     smtpEncryption = none
+[pager]
+    branch = false
 " >> ~/.gitconfig
