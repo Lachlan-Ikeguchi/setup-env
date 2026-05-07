@@ -55,8 +55,7 @@ if [[ ! -d ".git" ]]; then
 fi
 
 if $remote; then
-    git fetch
-    if ! git branch "$branch" "origin/$branch"; then
+    if ! git fetch origin "$branch:$branch"; then
         echo "Error: failed to create local tracking branch" >&2
         return 1
     fi
