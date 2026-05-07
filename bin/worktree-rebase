@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+
+# The purpose of this script is when given a branch name:
+# 1. Check if it is called from a repo (has .git/ directory). Exit if from worktree.
+# 2. rebase branch into repo (which will be master/main/trunk)
+# 3. delete worktree at ../<branch> and empty parent directories
+# 4. delete local branch
+# 5. delete remote branch
+#
+# - dry-run by default, requires --confirm flag to actually rebase and delete
+
+usage() {
+    cat <<EOF
+Usage: worktree-rebase [--confirm] <branch>
+
+Rebase a worktree branch into the main repository and clean up.
+
+Options:
+  --confirm    Actually perform the rebase and deletions (default is dry-run)
+  -h           Show this help message
+
+Must be called from the main repository (not a worktree).
+
+Steps:
+  1. Validates current directory is the main repository
+  2. Rebases <branch> onto master/main/trunk
+  3. Deletes the worktree directory at ../<branch> and empty parent directories
+  4. Deletes the local branch
+  5. Deletes the remote branch (origin/<branch>)
+EOF
+}
+
+confirm=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --confirm) confirm=true ;;
+        -h) usage; exit 0 ;;
+        *) break ;;
+    esac
+    shift
+done
+
+if [[ -z "$1" ]]; then
+    echo "Error: provide branch name" >&2
+    usage >&2
+    exit 1
+fi
+
+branch="$1"
+
+# Check if we're in the main repo (has .git/) not a worktree (has .git file)
+if [[ -f ".git" ]]; then
+    echo "Error: must be called from the main repository, not a worktree" >&2
+    exit 1
+fi
+
+if [[ ! -d ".git" ]]; then
+    echo "Error: not a git repository" >&2
+    exit 1
+fi
+
+# Determine the main branch (master, main, or trunk)
+main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|^refs/remotes/origin/||')
+if [[ -z "$main_branch" ]]; then
+    for candidate in main master trunk; do
+        if git show-ref --quiet refs/heads/$candidate; then
+            main_branch=$candidate
+            break
+        fi
+    done
+fi
+
+if [[ -z "$main_branch" ]]; then
+    echo "Error: cannot determine main branch (tried origin/HEAD, main, master, trunk)" >&2
+    exit 1
+fi
+
+# Check that the branch exists
+if ! git show-ref --quiet refs/heads/$branch; then
+    echo "Error: branch '$branch' does not exist" >&2
+    exit 1
+fi
+
+# Worktree is expected at ../<branch>
+worktree_path="../$branch"
+
+if $confirm; then
+    if ! git rebase "$branch"; then
+        echo "Error: rebase failed" >&2
+        exit 1
+    fi
+
+    if ! git worktree remove "$worktree_path" 2>/dev/null; then
+        echo "Error: could not remove worktree"
+        exit 1
+    fi
+
+    # Clean up empty parent directories
+    path_to_clean="$(dirname "$worktree_path")"
+    while [[ "$path_to_clean" != .. && "$path_to_clean" != . ]]; do
+        rmdir --ignore-fail-on-non-empty "$path_to_clean" 2>/dev/null || break
+        path_to_clean="${path_to_clean%/*}"
+    done
+
+    if ! git branch -d "$branch"; then
+        echo "Error: failed to delete local branch" >&2
+        exit 1
+    fi
+    echo ""
+
+    if ! git push -d "origin" "$branch" 2>/dev/null; then
+        echo "Warning: remote branch may not exist or deletion failed."
+    fi
+else
+    echo "=== DRY RUN - No changes will be made ==="
+    echo ""
+    echo "Would perform the following:"
+    echo "  1. Rebase $branch onto $main_branch"
+    echo "  2. Delete worktree at $worktree_path and clean up empty parent directories"
+    echo "  3. Delete local branch $branch"
+    echo "  4. Delete remote branch origin/$branch"
+    echo ""
+    echo "To execute, run: worktree-rebase --confirm $branch"
+fi

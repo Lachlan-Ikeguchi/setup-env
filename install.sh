@@ -1,5 +1,5 @@
-mkdir ~/.scripts
+mkdir ~/bin
 
-cp -r ./scripts/* ~/.scripts
+cp -r ./bin/* ~/bin/
 
 ./install-neovim.sh

@@ -28,6 +28,7 @@ fi
 export JULIA_NUM_THREADS=auto
 
 export PATH=\"\$HOME/neovim/bin:\$PATH\"
+export PATH=\"\$HOME/bin:\$PATH\"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true

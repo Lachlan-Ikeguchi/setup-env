@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# The purpose of this script is when given a branch name:
+#   create a branch (new or tracking remote) and a worktree at ..
+#   then move to the new worktree
+
+usage() {
+    cat <<EOF
+Usage: worktree [-r] <branch>
+
+Create a branch and a worktree linked to it.
+
+Options:
+  -r        Create local tracking branch from origin/<branch> (requires fetch)
+  -h        Show this help message
+
+Without -r: creates a new local branch from current HEAD.
+
+In both cases:
+  1. Creates the branch
+  2. Creates a worktree at ../<branch>
+  3. Moves to the new worktree
+EOF
+}
+
+remote=false
+
+while getopts "rh" opt; do
+    case "$opt" in
+        r) remote=true ;;
+        h) usage; return 0 ;;
+        *) usage; return 1 ;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+if [[ -z "$1" ]] then
+    echo "Error: provide branch name" >&2
+    usage >&2
+    return 1
+fi
+
+branch="$1"
+
+if $remote; then
+    git fetch
+    if ! git branch "$branch" "origin/$branch"; then
+        echo "Error: failed to create local tracking branch" >&2
+        return 1
+    fi
+else
+    if ! git branch "$branch"; then
+        echo "Error: failed to create branch" >&2
+        return 1
+    fi
+    printf "\nRemember to push to create tracking branches in remote\n\n"
+fi
+
+if ! git worktree add "../$branch" "$branch"; then
+    echo "Error: failed to create worktree" >&2
+    return 1
+fi
+
+cd "../$branch" || return 1
