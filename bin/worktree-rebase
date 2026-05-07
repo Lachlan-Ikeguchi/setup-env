@@ -107,7 +107,6 @@ if $confirm; then
         echo "Error: failed to delete local branch" >&2
         exit 1
     fi
-    echo ""
 
     if ! git push -d "origin" "$branch" 2>/dev/null; then
         echo "Warning: remote branch may not exist or deletion failed."
