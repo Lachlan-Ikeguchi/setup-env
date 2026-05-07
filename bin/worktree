@@ -1,55 +1,61 @@
 #!/usr/bin/env bash
 
-# The purpose of this script is when given a branch name:
-#   create a branch (new or tracking remote) and a worktree at ..
-#   then move to the new worktree
+# Combined worktree script
+# Without flags: create a branch and a worktree linked to it
+# With --rebase: rebase a worktree branch into the main repository and clean up
 
 usage() {
     cat <<EOF
-Usage: worktree [-r|-e] <branch>
+Usage: worktree [OPTIONS] <branch>
 
-Create a branch and a worktree linked to it.
+Create a branch and a worktree linked to it, or rebase and clean up.
 
 Options:
-  -r        Create local tracking branch from origin/<branch> (requires fetch).
-            Mutually exclusive with -e
-  -e        Create a worktree from an existing local branch.
-            Mutually exclusive with -r
-  -h        Show this help message
+  -r             Create local tracking branch from origin/<branch> (requires fetch).
+                 Mutually exclusive with -e
+  -e             Create a worktree from an existing local branch.
+                 Mutually exclusive with -r
+  --rebase       Rebase the branch into main and clean up worktree (requires --confirm)
+  --confirm      Confirm the rebase operation (used with --rebase)
+  -h             Show this help message
 
 Without switches: creates a new local branch from current HEAD.
 
-Actions:
+Create mode (default):
   1. Creates a local branch (-e skips this step)
   2. Creates a worktree at ../<branch>
-  3. Moves to the new worktree
+  3. Starts a new bash shell in the new worktree
+
+Rebase mode (--rebase):
+  1. Rebases <branch> onto master/main/trunk
+  2. Deletes the worktree directory at ../<branch> and empty parent directories
+  3. Deletes the local branch
+  4. Deletes the remote branch (origin/<branch>)
+  Note: dry-run by default, requires --confirm to actually perform actions
 EOF
 }
 
+rebase_mode=false
+confirm=false
 remote=false
 existing=false
 
-while getopts "reh" opt; do
-    case "$opt" in
-        r) remote=true ;;
-        e) existing=true ;;
-        h) usage; return 0 ;;
-        *) usage; return 1 ;;
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --rebase) rebase_mode=true ;;
+        --confirm) confirm=true ;;
+        -r) remote=true ;;
+        -e) existing=true ;;
+        -h) usage; exit 0 ;;
+        *) break ;;
     esac
+    shift
 done
-
-shift $((OPTIND - 1))
-
-if [[ "$remote" = true && "$existing" = true ]]; then
-    echo "Error: cannot use switches -r and -e at the same time" >&2
-    usage >&2
-    return 1
-fi
 
 if [[ -z "$1" ]]; then
     echo "Error: provide branch name" >&2
     usage >&2
-    return 1
+    exit 1
 fi
 
 branch="$1"
@@ -57,35 +63,122 @@ branch="$1"
 # Check if we're in the main repo (has .git/) not a worktree (has .git file)
 if [[ -f ".git" ]]; then
     echo "Error: must be called from the main repository, not a worktree" >&2
-    return 1
+    exit 1
 fi
 
 if [[ ! -d ".git" ]]; then
     echo "Error: not a git repository" >&2
-    return 1
+    exit 1
 fi
 
-if [[ "$remote" = true ]]; then
-    if ! git fetch origin "$branch:$branch"; then
-        echo "Error: failed to create local tracking branch" >&2
-        return 1
+if $rebase_mode; then
+    # ============ REBASE MODE ============
+
+    if [[ "$remote" = true || "$existing" = true ]]; then
+        echo "Error: cannot use -r or -e with --rebase" >&2
+        usage >&2
+        exit 1
     fi
-elif [[ "$existing" != true ]]; then
-    if ! git branch "$branch"; then
-        echo "Error: failed to create branch" >&2
-        return 1
+
+    # Determine the main branch (master, main, or trunk)
+    main_branch=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's|^refs/remotes/origin/||')
+    if [[ -z "$main_branch" ]]; then
+        for candidate in main master trunk; do
+            if git show-ref --quiet refs/heads/$candidate; then
+                main_branch=$candidate
+                break
+            fi
+        done
     fi
-    printf "\nRemember to push to create tracking branches in remote\n\n"
+
+    if [[ -z "$main_branch" ]]; then
+        echo "Error: cannot determine main branch (tried origin/HEAD, main, master, trunk)" >&2
+        exit 1
+    fi
+
+    # Check that the branch exists
+    if ! git show-ref --quiet refs/heads/$branch; then
+        echo "Error: branch '$branch' does not exist" >&2
+        exit 1
+    fi
+
+    # Worktree is expected at ../<branch>
+    worktree_path="../$branch"
+
+    if $confirm; then
+        if ! git rebase "$branch"; then
+            echo "Error: rebase failed" >&2
+            exit 1
+        fi
+
+        if ! git worktree remove "$worktree_path" 2>/dev/null; then
+            echo "Error: could not remove worktree" >&2
+            exit 1
+        fi
+
+        # Clean up empty parent directories
+        path_to_clean="$(dirname "$worktree_path")"
+        while [[ "$path_to_clean" != .. && "$path_to_clean" != . ]]; do
+            rmdir --ignore-fail-on-non-empty "$path_to_clean" 2>/dev/null || break
+            path_to_clean="${path_to_clean%/*}"
+        done
+
+        if ! git branch -d "$branch"; then
+            echo "Error: failed to delete local branch" >&2
+            exit 1
+        fi
+
+        if ! git push -d "origin" "$branch" 2>/dev/null; then
+            echo "Warning: remote branch may not exist or deletion failed."
+        fi
+    else
+        echo "=== DRY RUN - No changes will be made ==="
+        echo ""
+        echo "Would perform the following:"
+        echo "  1. Rebase $branch onto $main_branch"
+        echo "  2. Delete worktree at $worktree_path and clean up empty parent directories"
+        echo "  3. Delete local branch $branch"
+        echo "  4. Delete remote branch origin/$branch"
+        echo ""
+        echo "To execute, run: worktree --rebase --confirm $branch"
+    fi
 else
-    if ! git show-ref --quiet "refs/heads/$branch"; then
-        echo "Error: branch '$branch' does not exist locally" >&2
-        return 1
+    # ============ CREATE MODE ============
+
+    if [[ "$remote" = true && "$existing" = true ]]; then
+        echo "Error: cannot use switches -r and -e at the same time" >&2
+        usage >&2
+        exit 1
     fi
-fi
 
-if ! git worktree add "../$branch" "$branch"; then
-    echo "Error: failed to create worktree" >&2
-    return 1
-fi
+    if [[ "$confirm" = true ]]; then
+        echo "Error: --confirm is only used with --rebase" >&2
+        usage >&2
+        exit 1
+    fi
 
-cd "../$branch" || return 1
+    if [[ "$remote" = true ]]; then
+        if ! git fetch origin "$branch:$branch"; then
+            echo "Error: failed to create local tracking branch" >&2
+            exit 1
+        fi
+    elif [[ "$existing" != true ]]; then
+        if ! git branch "$branch"; then
+            echo "Error: failed to create branch" >&2
+            exit 1
+        fi
+        printf "\nRemember to push to create tracking branches in remote\n\n"
+    else
+        if ! git show-ref --quiet "refs/heads/$branch"; then
+            echo "Error: branch '$branch' does not exist locally" >&2
+            exit 1
+        fi
+    fi
+
+    if ! git worktree add "../$branch" "$branch"; then
+        echo "Error: failed to create worktree" >&2
+        exit 1
+    fi
+
+    exec bash -c 'cd "$1"; exec bash' _ "../$branch"
+fi

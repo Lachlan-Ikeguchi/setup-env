@@ -11,5 +11,4 @@ alias pub-ip='echo \"\$(curl -s ident.me)\"'
 alias time='/usr/bin/time -v'
 alias t-off='. torsocks off'
 alias nvim='. torsocks off && nvim'
-alias worktree='. worktree'
 #########################################" >> ~/.bash_aliases
