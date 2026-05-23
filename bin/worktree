@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 
 # Without flags: create a branch and a worktree linked to it
-# With --rebase: rebase a worktree branch into the main repository and clean up
 # With --merge: merge a worktree branch into the main repository and clean up
-# With --continue: clean up after resolving merge/rebase conflicts
+# With --continue: clean up after resolving merge conflicts
 # With -d: delete a worktree for a given branch
 
 usage() {
     cat <<EOF
 Usage: worktree [OPTIONS] <branch>
 
-Create a branch and a worktree linked to it, delete a worktree, or rebase/merge and clean up.
+Create a branch and a worktree linked to it, delete a worktree, or merge and clean up.
 
 Options:
   -r             Create local tracking branch from origin/<branch> (requires fetch).
@@ -18,11 +17,10 @@ Options:
   -e             Create a worktree from an existing local branch.
                  Mutually exclusive with -r and -d
   -d             Delete the worktree directory at ../<branch> and clean up empty parent directories.
-                 Mutually exclusive with -r, -e, --rebase, --merge, --continue
-  --rebase       Rebase the branch into master and clean up worktree (requires --confirm)
+                 Mutually exclusive with -r, -e, --merge, --continue
   --merge        Merges the branch into master and clean up worktree (requires --confirm)
-  --continue     Clean up after resolving merge/rebase conflicts (requires --confirm)
-  --confirm      Confirm the rebase, merge, or continue operation (used with --rebase, --merge, --continue)
+  --continue     Clean up after resolving merge conflicts (requires --confirm)
+  --confirm      Confirm the merge or continue operation (used with --merge, --continue)
   -h             Show this help message
 
 Without switches: creates a new local branch from current HEAD.
@@ -36,17 +34,9 @@ Delete mode (-d):
   1. Deletes the worktree at ../<branch>
   2. Cleans up empty parent directories
 
-Rebase mode (--rebase):
-  1. Deletes the worktree directory at ../<branch>
-  2. Rebases <branch> onto master/main/trunk
-  3. Cleans up empty parent directories
-  4. Deletes the local branch
-  5. Deletes the remote branch (origin/<branch>)
-  Note: dry-run by default, requires --confirm to actually perform actions
-
 Merge mode (--merge):
-  1. Deletes the worktree directory at ../<branch>
-  2. Merges <branch> onto master/main/trunk
+  1. Merges <branch> onto master/main/trunk
+  2. Deletes the worktree directory at ../<branch>
   3. Cleans up empty parent directories
   4. Deletes the local branch
   5. Deletes the remote branch (origin/<branch>)
@@ -56,11 +46,10 @@ Continue mode (--continue):
   1. Deletes the worktree directory at ../<branch> and empty parent directories
   2. Deletes the local branch
   3. Deletes the remote branch (origin/<branch>)
-  Note: Use after manually resolving rebase/merge conflicts. Requires --confirm.
+  Note: Use after manually resolving merge conflicts. Requires --confirm.
 EOF
 }
 
-rebase_mode=false
 merge_mode=false
 continue_mode=false
 confirm=false
@@ -70,7 +59,6 @@ delete_mode=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --rebase) rebase_mode=true ;;
         --merge) merge_mode=true ;;
         --continue) continue_mode=true ;;
         --confirm) confirm=true ;;
@@ -102,25 +90,13 @@ if [[ ! -d ".git" ]]; then
     exit 1
 fi
 
-if [[ "$rebase_mode" = true && "$merge_mode" = true ]]; then
-    echo "Error: cannot use --rebase and --merge together" >&2
-    usage >&2
-    exit 1
-fi
-
-if [[ "$rebase_mode" = true && "$continue_mode" = true ]]; then
-    echo "Error: cannot use --rebase and --continue together" >&2
-    usage >&2
-    exit 1
-fi
-
 if [[ "$merge_mode" = true && "$continue_mode" = true ]]; then
     echo "Error: cannot use --merge and --continue together" >&2
     usage >&2
     exit 1
 fi
 
-if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]]; then
+if [[ "$merge_mode" = true || "$continue_mode" = true ]]; then
     if $continue_mode && [[ "$confirm" != true ]]; then
         echo "Error: --continue requires --confirm" >&2
         usage >&2
@@ -128,7 +104,7 @@ if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]
     fi
 
     if [[ "$remote" = true || "$existing" = true || "$delete_mode" = true ]]; then
-        echo "Error: cannot use -r, -e, or -d with --rebase, --merge, or --continue" >&2
+        echo "Error: cannot use -r, -e, or -d with --merge or --continue" >&2
         usage >&2
         exit 1
     fi
@@ -159,34 +135,16 @@ if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]
     worktree_path="../$branch"
 
     if $confirm; then
-        if ! git worktree remove "$worktree_path" 2>/dev/null; then
-            echo "Error: could not remove worktree" >&2
-            exit 1
-        fi
-
-        if ! git checkout "$main_branch"; then
-            echo "Error: failed to checkout $main_branch" >&2
-            exit 1
-        fi
-
-        if $rebase_mode; then
-            if ! git checkout "$branch"; then
-                echo "Error: failed to checkout $branch" >&2
-                exit 1
-            fi
-            if ! git rebase "$main_branch"; then
-                echo "Error: rebase failed" >&2
-                exit 1
-            fi
-            if ! git checkout "$main_branch"; then
-                echo "Error: failed to checkout $main_branch" >&2
-                exit 1
-            fi
-        elif $merge_mode; then
+        if $merge_mode; then
             if ! git merge "$branch"; then
                 echo "Error: merge failed" >&2
                 exit 1
             fi
+        fi
+
+        if ! git worktree remove "$worktree_path" 2>/dev/null; then
+            echo "Error: could not remove worktree" >&2
+            exit 1
         fi
 
         # Clean up empty parent directories
@@ -208,10 +166,7 @@ if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]
         type_str=""
         flag_str=""
 
-        if $rebase_mode; then
-            type_str="Rebase"
-            flag_str="--rebase"
-        elif $merge_mode; then
+        if $merge_mode; then
             type_str="Merge"
             flag_str="--merge"
         elif $continue_mode; then
@@ -233,8 +188,8 @@ if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]
             echo "  2. Delete local branch $branch"
             echo "  3. Delete remote branch origin/$branch"
         else
-            echo "  1. Delete worktree at $worktree_path"
-            echo "  2. $type_str $branch onto $main_branch"
+            echo "  1. $type_str $branch onto $main_branch"
+            echo "  2. Delete worktree at $worktree_path"
             echo "  3. Clean up empty parent directories"
             echo "  4. Delete local branch $branch"
             echo "  5. Delete remote branch origin/$branch"
@@ -253,7 +208,7 @@ elif $delete_mode; then
     fi
 
     if [[ "$confirm" = true ]]; then
-        echo "Error: --confirm is only used with --rebase, --merge, or --continue" >&2
+        echo "Error: --confirm is only used with --merge or --continue" >&2
         usage >&2
         exit 1
     fi
@@ -290,7 +245,7 @@ else
     fi
 
     if [[ "$confirm" = true ]]; then
-        echo "Error: --confirm is only used with --rebase, --merge, or --continue" >&2
+        echo "Error: --confirm is only used with --merge or --continue" >&2
         usage >&2
         exit 1
     fi
