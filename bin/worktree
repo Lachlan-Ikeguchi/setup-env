@@ -159,7 +159,7 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
 
     if $confirm; then
         if $rebase_mode; then
-            if ! git rebase "$branch"; then
+            if ! git rebase "$main_branch" "$branch"; then
                 echo "Error: rebase failed" >&2
                 exit 1
             fi
@@ -193,20 +193,22 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
     else
         type_str=""
         flag_str=""
-        comment_str=""
 
         if $rebase_mode; then
             type_str="Rebase"
             flag_str="--rebase"
-            comment_str="Note: not recommended for branches with a remote tracker"
         elif $merge_mode; then
             type_str="Merge"
             flag_str="--merge"
-            comment_str=""
         elif $continue_mode; then
             type_str="Clean up"
             flag_str="--continue"
-            comment_str="Note: use after manually resolving rebase/merge conflicts"
+        fi
+
+        # Validate worktree exists
+        if [[ ! -d "$worktree_path" ]]; then
+            echo "Error: worktree directory not found at $worktree_path" >&2
+            exit 1
         fi
 
         echo "=== DRY RUN - No changes will be made ==="
@@ -224,7 +226,7 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
         fi
         echo ""
         echo "To execute, run: worktree $flag_str --confirm $branch"
-        echo "$comment_str"
+        echo "Warning: ensures no one else is working on this branch - it will be deleted"
     fi
 elif $delete_mode; then
     # ============ DELETE MODE ============
