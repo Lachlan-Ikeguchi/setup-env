@@ -157,6 +157,11 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
     worktree_path="../$branch"
 
     if $confirm; then
+        if ! git worktree remove "$worktree_path" 2>/dev/null; then
+            echo "Error: could not remove worktree" >&2
+            exit 1
+        fi
+
         if $rebase_mode; then
             if ! git rebase "$main_branch" "$branch"; then
                 echo "Error: rebase failed" >&2
@@ -167,11 +172,6 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
                 echo "Error: merge failed" >&2
                 exit 1
             fi
-        fi
-
-        if ! git worktree remove "$worktree_path" 2>/dev/null; then
-            echo "Error: could not remove worktree" >&2
-            exit 1
         fi
 
         # Clean up empty parent directories
