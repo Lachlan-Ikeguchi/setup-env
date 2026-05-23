@@ -120,7 +120,7 @@ if [[ "$merge_mode" = true && "$continue_mode" = true ]]; then
     exit 1
 fi
 
-if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
+if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]]; then
     if $continue_mode && [[ "$confirm" != true ]]; then
         echo "Error: --continue requires --confirm" >&2
         usage >&2
@@ -175,6 +175,8 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
                 exit 1
             fi
         fi
+
+        git checkout "$main_branch"
 
         # Clean up empty parent directories
         path_to_clean="$(dirname "$worktree_path")"
