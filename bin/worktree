@@ -260,7 +260,7 @@ else
             echo "Error: failed to create branch" >&2
             exit 1
         fi
-        printf "\nRemember to push to create tracking branches in remote\n\n"
+        printf "\nRemember to push to create tracking branches in remote (should not run git rebase $main_branch after this point)\n\n"
     else
         if ! git show-ref --quiet "refs/heads/$branch"; then
             echo "Error: branch '$branch' does not exist locally" >&2
