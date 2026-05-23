@@ -170,8 +170,16 @@ if [[ "$rebase_mode" = true || "$merge_mode" = true || "$continue_mode" = true ]
         fi
 
         if $rebase_mode; then
-            if ! git rebase "$main_branch" "$branch"; then
+            if ! git checkout "$branch"; then
+                echo "Error: failed to checkout $branch" >&2
+                exit 1
+            fi
+            if ! git rebase "$main_branch"; then
                 echo "Error: rebase failed" >&2
+                exit 1
+            fi
+            if ! git checkout "$main_branch"; then
+                echo "Error: failed to checkout $main_branch" >&2
                 exit 1
             fi
         elif $merge_mode; then
