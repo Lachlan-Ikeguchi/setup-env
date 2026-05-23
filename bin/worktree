@@ -37,17 +37,19 @@ Delete mode (-d):
   2. Cleans up empty parent directories
 
 Rebase mode (--rebase):
-  1. Rebases <branch> onto master/main/trunk
-  2. Deletes the worktree directory at ../<branch> and empty parent directories
-  3. Deletes the local branch
-  4. Deletes the remote branch (origin/<branch>)
+  1. Deletes the worktree directory at ../<branch>
+  2. Rebases <branch> onto master/main/trunk
+  3. Cleans up empty parent directories
+  4. Deletes the local branch
+  5. Deletes the remote branch (origin/<branch>)
   Note: dry-run by default, requires --confirm to actually perform actions
 
 Merge mode (--merge):
-  1. Merges <branch> onto master/main/trunk
-  2. Deletes the worktree directory at ../<branch> and empty parent directories
-  3. Deletes the local branch
-  4. Deletes the remote branch (origin/<branch>)
+  1. Deletes the worktree directory at ../<branch>
+  2. Merges <branch> onto master/main/trunk
+  3. Cleans up empty parent directories
+  4. Deletes the local branch
+  5. Deletes the remote branch (origin/<branch>)
   Note: dry-run by default, requires --confirm to actually perform actions
 
 Continue mode (--continue):
@@ -157,6 +159,11 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
     worktree_path="../$branch"
 
     if $confirm; then
+        if ! git worktree remove "$worktree_path" 2>/dev/null; then
+            echo "Error: could not remove worktree" >&2
+            exit 1
+        fi
+
         if $rebase_mode; then
             if ! git rebase "$main_branch" "$branch"; then
                 echo "Error: rebase failed" >&2
@@ -167,11 +174,6 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
                 echo "Error: merge failed" >&2
                 exit 1
             fi
-        fi
-
-        if ! git worktree remove "$worktree_path" 2>/dev/null; then
-            echo "Error: could not remove worktree" >&2
-            exit 1
         fi
 
         # Clean up empty parent directories
@@ -218,10 +220,11 @@ if [[ "$rebase_mode" || "$merge_mode" || "$continue_mode" ]]; then
             echo "  2. Delete local branch $branch"
             echo "  3. Delete remote branch origin/$branch"
         else
-            echo "  1. $type_str $branch onto $main_branch"
-            echo "  2. Delete worktree at $worktree_path and clean up empty parent directories"
-            echo "  3. Delete local branch $branch"
-            echo "  4. Delete remote branch origin/$branch"
+            echo "  1. Delete worktree at $worktree_path"
+            echo "  2. $type_str $branch onto $main_branch"
+            echo "  3. Clean up empty parent directories"
+            echo "  4. Delete local branch $branch"
+            echo "  5. Delete remote branch origin/$branch"
         fi
         echo ""
         echo "To execute, run: worktree $flag_str --confirm $branch"
