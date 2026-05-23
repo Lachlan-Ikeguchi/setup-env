@@ -20,7 +20,6 @@ Options:
   -d             Delete the worktree directory at ../<branch> and clean up empty parent directories.
                  Mutually exclusive with -r, -e, --rebase, --merge, --continue
   --rebase       Rebase the branch into master and clean up worktree (requires --confirm)
-                 (Not suitable for branches with a remote tracker)
   --merge        Merges the branch into master and clean up worktree (requires --confirm)
   --continue     Clean up after resolving merge/rebase conflicts (requires --confirm)
   --confirm      Confirm the rebase, merge, or continue operation (used with --rebase, --merge, --continue)
