@@ -4,10 +4,12 @@
 # With --merge: merge a worktree branch into the main repository and clean up
 # With --continue: clean up after resolving merge conflicts
 # With -d: delete a worktree for a given branch
+# With list: list all worktrees
 
 usage() {
     cat <<EOF
 Usage: worktree [OPTIONS] <branch>
+Usage: worktree list
 
 Create a branch and a worktree linked to it, delete a worktree, or merge and clean up.
 
@@ -23,12 +25,16 @@ Options:
   --confirm      Confirm the merge or continue operation (used with --merge, --continue)
   -h             Show this help message
 
+Commands:
+  list           List all worktrees (runs 'git worktree list')
+
 Without switches: creates a new local branch from current HEAD.
 
 Create mode (default):
   1. Creates a local branch (-e skips this step)
   2. Creates a worktree at ../<branch>
   3. Starts a new bash shell in the new worktree
+    - If worktree already exists, enters it in a new shell
 
 Delete mode (-d):
   1. Deletes the worktree at ../<branch>
@@ -75,6 +81,11 @@ if [[ -z "$1" ]]; then
     echo "Error: provide branch name" >&2
     usage >&2
     exit 1
+fi
+
+# Handle list command
+if [[ "$1" == "list" ]]; then
+    exec git worktree list
 fi
 
 branch="$1"
@@ -250,28 +261,41 @@ else
         exit 1
     fi
 
-    if [[ "$remote" = true ]]; then
-        if ! git fetch origin "$branch:$branch"; then
-            echo "Error: failed to create local tracking branch" >&2
-            exit 1
+    worktree_path="../$branch"
+
+    # If worktree already exists, skip creation
+    if [[ -d "$worktree_path" ]]; then
+        # Branch validation still needed for -e flag
+        if [[ "$existing" = true ]]; then
+            if ! git show-ref --quiet "refs/heads/$branch"; then
+                echo "Error: branch '$branch' does not exist locally" >&2
+                exit 1
+            fi
         fi
-    elif [[ "$existing" != true ]]; then
-        if ! git branch "$branch"; then
-            echo "Error: failed to create branch" >&2
-            exit 1
-        fi
-        printf "\nRemember to push to create tracking branches in remote (should not run git rebase $main_branch after this point)\n\n"
     else
-        if ! git show-ref --quiet "refs/heads/$branch"; then
-            echo "Error: branch '$branch' does not exist locally" >&2
+        if [[ "$remote" = true ]]; then
+            if ! git fetch origin "$branch:$branch"; then
+                echo "Error: failed to create local tracking branch" >&2
+                exit 1
+            fi
+        elif [[ "$existing" != true ]]; then
+            if ! git branch "$branch"; then
+                echo "Error: failed to create branch" >&2
+                exit 1
+            fi
+            printf "\nRemember to push to create tracking branches in remote\n\n"
+        else
+            if ! git show-ref --quiet "refs/heads/$branch"; then
+                echo "Error: branch '$branch' does not exist locally" >&2
+                exit 1
+            fi
+        fi
+
+        if ! git worktree add "$worktree_path" "$branch"; then
+            echo "Error: failed to create worktree" >&2
             exit 1
         fi
     fi
 
-    if ! git worktree add "../$branch" "$branch"; then
-        echo "Error: failed to create worktree" >&2
-        exit 1
-    fi
-
-    exec bash -c 'cd "$1"; exec bash' _ "../$branch"
+    exec bash -c 'cd "$1"; exec bash' _ "$worktree_path"
 fi
