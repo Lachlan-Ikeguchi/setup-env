@@ -1,0 +1,45 @@
+# System packages
+- zig
+- rustup
+- juliaup
+- make
+- cmake
+- ninja
+- git
+- gh
+- tmux
+- sway
+- swaybar
+- swaync
+- swaylock
+- swaybg
+- alacritty
+- aerc
+- mpv
+- fzf
+- podman
+- distrobox
+
+# Flatpak packages
+- discord
+- signal
+- neochat
+- firefox
+- qbittorrent
+- steam
+- easyeffects
+- dropbox
+- flatseal
+- proton pass
+- proton mail bridge
+- proton mail
+- proton vpn
+- okular
+- gwenview
+- flatsweep
+- vlc
+- easyflatpak
+- freeplane
+- libreoffice
+- Freecad
+- KiCAD

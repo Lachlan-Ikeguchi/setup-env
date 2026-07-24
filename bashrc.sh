@@ -9,7 +9,7 @@ function _prompt_container_or_host() {
   fi
 }
 
-PROMPT_COMMAND='PS1=\"\\[\\033[35m\\][\`uname -s -r\`] \\[\\033[32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
+export PROMPT_COMMAND='PS1=\"\\[\\033[35m\\][\`uname -s -r\`] \\[\\033[32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
 
 if command -v tmux > /dev/null; then
   if [ -z \$TMUX ]; then
@@ -21,11 +21,9 @@ if command -v tmux > /dev/null; then
   fi
 fi
 
-if [ -n \"\$TMUX\" ]; then
-  . torsocks on
-fi
-
 export JULIA_NUM_THREADS=auto
+
+export CMAKE_GENERATOR=Ninja
 
 export PATH=\"\$HOME/neovim/bin:\$PATH\"
 export PATH=\"\$HOME/bin:\$PATH\"
