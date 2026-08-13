@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+./install/macro
+
+./install/neovim
+
+./install/scripts
+
+./install/uv
+
+./install/vibe
+
+./install/worktree
+
+./install/zig

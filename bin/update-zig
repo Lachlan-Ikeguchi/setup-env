@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+cd /home/lachlan/zig-bootstrap
+
+git pull
+./build native-linux-gnu native
+cd out/
+cd zig-native-linux-gnu-native/
+cp ./zig ~/bin/zig
+cp -r ./lib/ ~/bin/lib

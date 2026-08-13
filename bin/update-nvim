@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 cd ~/neovim/ 
 git pull
 rm -r build/ 
