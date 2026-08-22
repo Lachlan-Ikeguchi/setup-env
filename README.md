@@ -27,6 +27,7 @@
 - clang
 - steam-devices
 - nmap
+- filelight
 
 # Flatpak packages
 - discord
@@ -53,7 +54,6 @@
 - KiCAD
 - embellish
 - Tor browser launcher
-- filelight
 - kbibtex
 - obsidian
 
