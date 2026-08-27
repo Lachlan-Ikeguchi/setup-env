@@ -8,6 +8,8 @@
 
 ./config/nvim
 
+./config/nix
+
 ./config/sway
 
 ./config/tmux

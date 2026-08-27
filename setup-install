@@ -4,6 +4,8 @@
 
 ./install/neovim
 
+./install/nix
+
 ./install/scripts
 
 ./install/uv
