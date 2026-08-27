@@ -20,6 +20,15 @@
 - podman
 - distrobox
 - latexmk
+- go
+- htop
+- neovim
+- latexmk
+- gcc
+- clang
+- steam-devices
+- nmap
+- filelight
 
 # Flatpak packages
 - discord
@@ -44,3 +53,20 @@
 - libreoffice
 - Freecad
 - KiCAD
+- embellish
+- Tor browser launcher
+- kbibtex
+- obsidian
+
+# Installing flatpak on OpenSUSE Tumbleweed
+```bash
+sudo zypper install flatpak
+```
+
+```bash
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+```
+
+```bash
+flatpak update
+```

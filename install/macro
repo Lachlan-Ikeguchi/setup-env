@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+git clone https://github.com/lachlan-ikeguchi/macro ~/macro
+cd ~/macro
+make build
+make install

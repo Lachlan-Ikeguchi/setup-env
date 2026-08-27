@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 git clone https://github.com/neovim/neovim.git ~/neovim
 cd ~/neovim/
 make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX=$HOME/neovim"

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+./setup-bash
+
+./setup-config
+
+./setup-git
+
+./setup-install

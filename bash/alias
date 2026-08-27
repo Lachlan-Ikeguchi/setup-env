@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 echo "############ added by script ############
 # ---------- quality of life ---------- #
 alias alias-edt='nvim ~/.bash_aliases'

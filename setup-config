@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+./config/aerc
+
+./config/alacritty
+
+./config/htop
+
+./config/nvim
+
+./config/nix
+
+./config/sway
+
+./config/tmux
+

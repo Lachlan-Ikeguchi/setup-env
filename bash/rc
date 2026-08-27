@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 echo "# ---------- added by script ---------- #
-source ~/bin/git-prompt.sh
+source ~/bin/git-prompt.bash
 
 function _prompt_container_or_host() {
   if [[ -n \"\$CONTAINER_ID\" ]]; then
