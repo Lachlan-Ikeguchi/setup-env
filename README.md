@@ -19,6 +19,7 @@
 - fzf
 - podman
 - distrobox
+- latexmk
 
 # Flatpak packages
 - discord
