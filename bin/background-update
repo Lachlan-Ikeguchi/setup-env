@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+LOGDIR="$HOME/update_logs/$(date +%s)"
+mkdir -p "$LOGDIR"
+
+juliaup update 1>>"$LOGDIR/julia" 2>&1 && julia -e "using Pkg;  Pkg.update()" 1>>"$LOGDIR/julia" 2>&1 &
+rustup update 1>>"$LOGDIR/rust" 2>&1 &
+update-neovim 1>>"$LOGDIR/neovim" 2>&1 &
+update-zig 1>>"$LOGDIR/zig" 2>&1 &

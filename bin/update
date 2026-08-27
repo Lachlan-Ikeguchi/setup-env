@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+background-update &
+
+sudo zypper dup
+flatpak update
