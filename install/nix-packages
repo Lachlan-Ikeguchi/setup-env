@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# nix profile add nixpkgs#
+
+nix profile add nixpkgs#neovim
+
+nix profile add nixpkgs#zig
+
+nix profile add nixpkgs#gnumake
+
+nix profile add nixpkgs#cmake
+
+nix profile add nixpkgs#ninja
+
+nix profile add nixpkgs#fzf
+
+nix profile add nixpkgs#go
+
+nix profile add nixpkgs#gcc --priority 10
+
+nix profile add nixpkgs#clang --priority 9
+
+nix profile add nixpkgs#nmap
+
+nix profile add nixpkgs#rustup
+
+nix profile add nixpkgs#julia
+
+nix profile add nixpkgs#tmux
+
+nix profile add nixpkgs#git
+
+nix profile add nixpkgs#gh
+
+nix profile add nixpkgs#aerc
+
+nix profile add nixpkgs#nerd-fonts.fira-code
+
+nix profile add nixpkgs#nerd-fonts.fira-mono
+

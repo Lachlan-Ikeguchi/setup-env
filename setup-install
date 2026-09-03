@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
-./install/macro
-
-./install/neovim
-
 ./install/nix
+
+./install/nix-packages
 
 ./install/scripts
 
@@ -14,4 +12,4 @@
 
 ./install/worktree
 
-./install/zig
+./install/macro

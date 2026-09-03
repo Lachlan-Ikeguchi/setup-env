@@ -1,33 +1,18 @@
 # System packages
-- zig
-- rustup
-- juliaup
-- make
-- cmake
-- ninja
 - git
-- gh
-- tmux
 - sway
 - swaybar
 - swaync
 - swaylock
 - swaybg
 - alacritty
-- aerc
 - mpv
-- fzf
 - podman
 - distrobox
-- latexmk
-- go
+- latexmk / texlive packages
 - htop
-- neovim
 - latexmk
-- gcc
-- clang
 - steam-devices
-- nmap
 - filelight
 
 # Flatpak packages
