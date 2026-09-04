@@ -11,6 +11,5 @@
 - distrobox
 - latexmk / texlive packages
 - htop
-- latexmk
 - steam-devices
 - filelight

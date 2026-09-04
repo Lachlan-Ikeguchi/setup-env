@@ -5,6 +5,10 @@ nix profile add nixpkgs#neovim
 
 nix profile add nixpkgs#zig
 
+nix profile add nixpkgs#verilator
+
+nix profile add nixpkgs#devenv
+
 nix profile add nixpkgs#gnumake
 
 nix profile add nixpkgs#cmake
