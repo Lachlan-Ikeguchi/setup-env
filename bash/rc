@@ -5,13 +5,21 @@ source ~/bin/git-prompt.bash
 
 function _prompt_container_or_host() {
   if [[ -n \"\$CONTAINER_ID\" ]]; then
-    echo \"\\[\\033[33m\\]$(echo \"\$CONTAINER_ID\")\"
+    echo \"\\[\\033[33m\\]\$(echo \"\$CONTAINER_ID\")\"
   else
     echo \"\\[\\033[31m\\]\\H\"
   fi
 }
 
-export PROMPT_COMMAND='PS1=\"\\[\\033[35m\\][\$(os-name)] \\[\\033[1;31m\\]\$SHLVL \\[\\033[0;32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
+prompt_task() {
+    [ -n \"\$TASK\" ] && echo \"[\${TASK}] \"
+}
+
+task() {
+    TASK=\"\$*\" bash
+}
+
+export PROMPT_COMMAND='PS1=\"\\[\\033[35m\\][\$(os-name)] \\[\\033[1;31m\\]\$(prompt_task)\\[\\033[0;32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
 
 if command -v tmux > /dev/null; then
   if [ -z \$TMUX ]; then
@@ -39,7 +47,7 @@ export GIT_PS1_SHOWCONFLICTSTATE='yes'
 export HISTFILE=\"\$HOME/.bash_history\"
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
-export HISTIGNORE='clear':'ls':'ll':'l':'history':'nh'
+export HISTIGNORE='clear':'ls':'ll':'l':'history'
 export HISTTIMEFORMAT='%A, %F %T '
 
 if [ -f ~/.bash_aliases ]; then
