@@ -1,0 +1,3 @@
+#!/usr/bin/env
+
+flatpak install ch.protonmail.protonmail-bridge ch.protonmail.protonmail-bridge com.discordapp.Discord com.dropbox.Client com.github.tchx84.Flatseal com.github.wwmm.easyeffects com.github.xournalpp.xournalpp com.protonvpn.www com.valvesoftware.Steam io.github.getnf.embellish io.github.giantpinkrobots.flatsweep md.obsidian.Obsidian me.proton.Mail me.proton.Pass org.dupot.easyflatpak org.freecad.FreeCAD org.freeplane.App org.gimp.GIMP org.kde.gwenview org.kde.kbibtex org.kde.neochat org.kde.okular org.kicad.KiCad org.libreoffice.LibreOffice org.mozilla.firefox org.qbittorrent.qBittorrent org.signal.Signal org.torproject.torbrowser-launcher org.videolan.VL

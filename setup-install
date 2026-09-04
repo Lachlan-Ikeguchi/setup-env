@@ -4,6 +4,10 @@
 
 ./install/nix-packages
 
+./install/flatpak
+
+./install/flatpak-packages
+
 ./install/scripts
 
 ./install/uv
