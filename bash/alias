@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-echo "############ added by script ############
+sed -i '/############ added by script ############/,/#########################################/d' ~/.bash_aliases
+
+cat >> ~/.bash_aliases <<'BLOCK'
+############ added by script ############
 # ---------- quality of life ---------- #
 alias alias-edt='nvim ~/.bash_aliases'
 alias bash-edt='nvim ~/.bashrc'
@@ -9,6 +12,7 @@ alias grep='grep --color=auto'
 alias l='ls -CFa'
 alias ll='ls -la'
 alias ls='ls --color=auto'
-alias pub-ip='echo \"\$(curl -s ident.me)\"'
+alias pub-ip='curl -s ident.me'
 alias time='/usr/bin/time -v'
-#########################################" >> ~/.bash_aliases
+#########################################
+BLOCK

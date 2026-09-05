@@ -1,38 +1,43 @@
 #!/usr/bin/env bash
 
-echo "# ---------- added by script ---------- #
+sed -i '/# ---------- added by script ---------- #/,/# ------------------------------------- #/d' ~/.bashrc
+
+cat >> ~/.bashrc <<'BLOCK'
+# ---------- added by script ---------- #
 source ~/bin/git-prompt.bash
 
 function _prompt_container_or_host() {
-  if [[ -n \"\$CONTAINER_ID\" ]]; then
-    echo \"\\[\\033[33m\\]\$(echo \"\$CONTAINER_ID\")\"
+  if [[ -n "$CONTAINER_ID" ]]; then
+    echo "\[\033[33m\]$(echo "$CONTAINER_ID")"
   else
-    echo \"\\[\\033[31m\\]\\H\"
+    echo "\[\033[31m\]\H"
   fi
 }
 
+_COPY_BUFFER=$(mktemp)
+
 s() {
-    { \$*; } 2>&1 | tee /tmp/\$\$.buffer
+    { "$@"; } 2>&1 | tee "$_COPY_BUFFER"
 }
 
 p() {
-    cat \"/tmp/\$\$.buffer\"
+    cat "$_COPY_BUFFER"
 }
 
-trap 'rm -f /tmp/\$\$.buffer' EXIT
+trap 'rm -f "$_COPY_BUFFER"' EXIT
 
 prompt_task() {
-    [ -n \"\$TASK\" ] && echo \"[\${TASK}] \"
+    [ -n "$TASK" ] && echo "[${TASK}] "
 }
 
 task() {
-    TASK=\"\$*\" bash
+    TASK="$*" bash
 }
 
-export PROMPT_COMMAND='PS1=\"\\[\\033[1;35m\\]\$(prompt_task)\\[\\033[0;32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
+export PROMPT_COMMAND='PS1="\[\033[1;35m\]$(prompt_task)\[\033[0;32m\]\u \[\033[00m\]@ $(_prompt_container_or_host)\[\033[32m\]$(__git_ps1) \[\033[34m\]\w \[\033[00m\]\$ "'
 
 if command -v tmux > /dev/null; then
-  if [ -z \$TMUX ]; then
+  if [ -z "$TMUX" ]; then
     if tmux list-sessions > /dev/null 2>&1; then
       tmux attach-session -d || tmux new-session
     else
@@ -45,8 +50,8 @@ export JULIA_NUM_THREADS=auto
 
 export CMAKE_GENERATOR=Ninja
 
-export PATH=\"\$HOME/.cargo/bin:\$PATH\"
-export PATH=\"\$HOME/bin:\$PATH\"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWSTASHSTATE=true
@@ -54,13 +59,14 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 export GIT_PS1_SHOWUPSTREAM='auto'
 export GIT_PS1_SHOWCONFLICTSTATE='yes'
 
-export HISTFILE=\"\$HOME/.bash_history\"
+export HISTFILE="$HOME/.bash_history"
 export HISTSIZE=-1
 export HISTCONTROL=ignorespace
-export HISTIGNORE='clear':'ls':'ll':'l':'history'
+export HISTIGNORE='clear:exit:ls:ll:l:history'
 export HISTTIMEFORMAT='%A, %F %T '
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-# ------------------------------------- #" >> ~/.bashrc
+# ------------------------------------- #
+BLOCK
