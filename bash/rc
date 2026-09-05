@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-sed -i '/# ---------- added by script ---------- #/,/# ------------------------------------- #/d' ~/.bashrc
+sed -i '/########## added by script ##########/,/#####################################/d' ~/.bashrc
 
 cat >> ~/.bashrc <<'BLOCK'
-# ---------- added by script ---------- #
+########## added by script ##########
 source ~/bin/git-prompt.bash
 
 function _prompt_container_or_host() {
@@ -68,5 +68,5 @@ export HISTTIMEFORMAT='%A, %F %T '
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-# ------------------------------------- #
+#####################################
 BLOCK
