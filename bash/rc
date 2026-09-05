@@ -11,6 +11,16 @@ function _prompt_container_or_host() {
   fi
 }
 
+s() {
+    { \$*; } 2>&1 | tee /tmp/\$\$.buffer
+}
+
+p() {
+    cat \"/tmp/\$\$.buffer\"
+}
+
+trap 'rm -f /tmp/\$\$.buffer' EXIT
+
 prompt_task() {
     [ -n \"\$TASK\" ] && echo \"[\${TASK}] \"
 }
@@ -19,7 +29,7 @@ task() {
     TASK=\"\$*\" bash
 }
 
-export PROMPT_COMMAND='PS1=\"\\[\\033[35m\\][\$(os-name)] \\[\\033[1;31m\\]\$(prompt_task)\\[\\033[0;32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
+export PROMPT_COMMAND='PS1=\"\\[\\033[1;35m\\]\$(prompt_task)\\[\\033[0;32m\\]\\u \\[\\033[00m\\]@ \$(_prompt_container_or_host)\\[\\033[32m\\]\$(__git_ps1) \\[\\033[34m\\]\\w \\[\\033[00m\\]\\$ \"'
 
 if command -v tmux > /dev/null; then
   if [ -z \$TMUX ]; then
