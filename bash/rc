@@ -14,17 +14,17 @@ function _prompt_container_or_host() {
   fi
 }
 
-_COPY_BUFFER=$(mktemp)
+export COPY_BUFFER=$(mktemp)
 
 s() {
-    { "$@"; } 2>&1 | tee "$_COPY_BUFFER"
+    { "$@"; } 2>&1 | tee "$COPY_BUFFER"
 }
 
 p() {
-    cat "$_COPY_BUFFER"
+    cat "$COPY_BUFFER"
 }
 
-trap 'rm -f "$_COPY_BUFFER"' EXIT
+trap 'rm -f "$COPY_BUFFER"' EXIT
 
 prompt_task() {
     [ -n "$TASK" ] && echo "[${TASK}] "
