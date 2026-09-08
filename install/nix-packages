@@ -33,6 +33,8 @@ nix profile add nixpkgs#tmux
 
 nix profile add nixpkgs#git
 
+nix profile add nixpkgs#git-filter-repo
+
 nix profile add nixpkgs#gh
 
 nix profile add nixpkgs#aerc
