@@ -3,6 +3,8 @@
 
 nix profile add nixpkgs#neovim
 
+nix profile add nixpkgs#ripgrep
+
 nix profile add nixpkgs#zig
 
 nix profile add nixpkgs#verilator
