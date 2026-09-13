@@ -24,6 +24,10 @@ p() {
     cat "$COPY_BUFFER"
 }
 
+v() {
+    vibe -p "$*"
+}
+
 trap 'rm -f "$COPY_BUFFER"' EXIT
 
 prompt_task() {
