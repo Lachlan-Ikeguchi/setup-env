@@ -54,6 +54,8 @@ export JULIA_NUM_THREADS=auto
 
 export CMAKE_GENERATOR=Ninja
 
+export LESS="--no-init --use-color -R"
+
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
 
