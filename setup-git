@@ -10,30 +10,23 @@ Remember to configure sendemail password!
 
 "
 
-echo "
-[user]
-	name = Lachlan Ikeguchi
-	email = lachlan_ikeguchi@proton.me
-[push]
-	autoSetupRemote = true
-	recurseSubmodules = on-demand
-[init]
-	defaultBranch = master
-[core]
-	editor = nvim
-    pager = less
-[submodule]
-    recurse = true
-[format]
-    signOff = yes
-[sendemail]
-    annotate = yes
-    confirm = always
-    smtpServer = 127.0.0.1
-    smtpServerport = 1025
-    smtpUser = lachlan_ikeguchi@proton.me
-    smtpPass = 
-    smtpEncryption = none
-[pager]
-    branch = false
-" >> ~/.gitconfig
+git config --global user.name "Lachlan Ikeguchi"
+git config --global user.email "lachlan_ikeguchi@proton.me"
+git config --global push.autoSetupRemote true
+git config --global push.recurseSubmodules on-demand
+git config --global init.defaultBranch master
+git config --global core.editor nvim
+git config --global core.pager less
+git config --global submodule.recurse true
+git config --global format.signOff yes
+git config --global sendemail.annotate yes
+git config --global sendemail.confirm always
+git config --global sendemail.smtpServer 127.0.0.1
+git config --global sendemail.smtpServerport 1025
+git config --global sendemail.smtpUser lachlan_ikeguchi@proton.me
+# Only set smtpPass if not already configured
+if ! git config --global --get sendemail.smtpPass > /dev/null 2>&1; then
+    git config --global sendemail.smtpPass ""
+fi
+git config --global sendemail.smtpEncryption none
+git config --global pager.branch false
