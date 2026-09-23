@@ -17,7 +17,12 @@ function _prompt_container_or_host() {
 export COPY_BUFFER=$(mktemp)
 
 s() {
-    { "$@"; } 2>&1 | tee "$COPY_BUFFER"
+    if [ $# -eq 0 ]; then
+        cat 2>&1
+    else
+        { "$@"; } 2>&1
+    fi | tee "$COPY_BUFFER" | \
+        (wl-copy 2>/dev/null || xclip -selection clipboard 2>/dev/null || xsel --clipboard 2>/dev/null)
 }
 
 p() {
