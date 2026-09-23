@@ -21,7 +21,7 @@ echo "
 	defaultBranch = master
 [core]
 	editor = nvim
-    pager = cat
+    pager = less
 [submodule]
     recurse = true
 [format]
