@@ -21,9 +21,7 @@ nix profile add nixpkgs#fzf
 
 nix profile add nixpkgs#go
 
-nix profile add nixpkgs#gcc --priority 10
-
-nix profile add nixpkgs#clang --priority 9
+nix profile add nixpkgs#clang
 
 nix profile add nixpkgs#nmap
 
