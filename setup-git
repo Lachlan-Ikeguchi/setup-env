@@ -30,3 +30,4 @@ if ! git config --global --get sendemail.smtpPass > /dev/null 2>&1; then
 fi
 git config --global sendemail.smtpEncryption none
 git config --global pager.branch false
+git config --global merge.tool nvimdiff
